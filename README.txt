@@ -7,7 +7,7 @@ Ulised Martinez who helped me to get an idea of how prefixes and sufixes worked.
 Elsa Gonzalez in debugging purposses
 Danner Pacheco debugging  purposses
 
-
+Dr Freudenthal Code was really useful to implement what we were asked to do.
 
 This directory contains:
 

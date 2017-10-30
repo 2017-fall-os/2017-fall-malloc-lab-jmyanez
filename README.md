@@ -1,4 +1,17 @@
-# os-malloc
+#MALLOC LAB
+
+For this lab i implemented NextFit  implementation and impleneted wat Dr Freudenthal asked us to modify (Resize Function).
+
+For this lab i collaborated with:
+Ulised Martinez who helped me to get an idea of how prefixes and sufixes worked.
+Elsa Gonzalez in debugging purposses
+Danner Pacheco debugging  purposses
+
+Dr Freudenthal Code was really useful to implement what we were asked to do.
+
+
+
+os-malloc
 This directory contains:
 
 myAllocator.c: a first-fit allocator
