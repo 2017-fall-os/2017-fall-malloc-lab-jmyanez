@@ -51,7 +51,7 @@
 #define align8(x) ((x+7) & ~7)
 #define prefixSize align8(sizeof(BlockPrefix_t))
 #define suffixSize align8(sizeof(BlockSuffix_t))
-
+BlockPrefix_t *lastAlloc; 
 /* how much memory to ask for */
 const size_t DEFAULT_BRKSIZE = 0x100000;	/* 1M */
 
@@ -192,7 +192,7 @@ BlockPrefix_t *findFirstFit(size_t s) {	/* find first block with usable space > 
     return growArena(s);
 }
 
-BlockPrefix_t *lastAlloc; 
+//BlockPrefix_t *lastAlloc; 
 /////////////////////Next Fit Function 
 BlockPrefix_t *findNextFit(size_t s) {	/* find Best block with usable space > s */
   BlockPrefix_t *p = lastAlloc;
@@ -207,7 +207,7 @@ BlockPrefix_t *findNextFit(size_t s) {	/* find Best block with usable space > s 
 	p = arenaBegin;
       }
       else if (getNextPrefix(p)== lastAlloc){
-	break;
+	printf("Holi2\n");
       }
       else p = getNextPrefix(p);
     }
