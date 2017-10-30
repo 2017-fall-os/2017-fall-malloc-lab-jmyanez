@@ -75,7 +75,7 @@ void initializeArena() {
 	return; 
     arenaBegin = makeFreeBlock(sbrk(DEFAULT_BRKSIZE), DEFAULT_BRKSIZE);
     arenaEnd = ((void *)arenaBegin) + DEFAULT_BRKSIZE;
-    BlockPrefix_t *lastAlloc=arenaBegin;
+    lastAlloc=arenaBegin;
 }
 
 size_t computeUsableSpace(BlockPrefix_t *p) { /* useful space within a block */
@@ -196,9 +196,8 @@ BlockPrefix_t *findFirstFit(size_t s) {	/* find first block with usable space > 
 /////////////////////Next Fit Function 
 BlockPrefix_t *findNextFit(size_t s) {	/* find Best block with usable space > s */
   BlockPrefix_t *p = lastAlloc;
-  printf("Holi\n");
-    while (p) {
-      if (!p->allocated && computeUsableSpace(p) >= s){
+     while (p) {
+       if (!p->allocated && computeUsableSpace(p) >= s){ 
 	lastAlloc = p;
 	return p;
       }
@@ -207,7 +206,7 @@ BlockPrefix_t *findNextFit(size_t s) {	/* find Best block with usable space > s 
 	p = arenaBegin;
       }
       else if (getNextPrefix(p)== lastAlloc){
-	printf("Holi2\n");
+	break;
       }
       else p = getNextPrefix(p);
     }
@@ -316,14 +315,13 @@ void *resizeRegion(void *r, size_t newSize) {
     oldSize = 0;		/* non-existant regions have size 0 */
   if (oldSize >= newSize)	/* old region is big enough */
     return r;
-
-  ////////////////////////////////////////////.........................../////////////////////////////////////////////////////
-  if(np->allocated==0 && aNewSize<=newSize){
+  /*TODO part*/
+  if(np->allocated==0 && aNewSize<=newSize){ // if np is free and if there is enough space then adjust
      p->suffix = np->suffix;
      np->suffix->prefix = p; 
      r= prefixToRegion(p);
      return r;
-  }
+     } 
 
 
   else {			/* allocate new region & copy old data */
