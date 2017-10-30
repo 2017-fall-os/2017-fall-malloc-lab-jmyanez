@@ -191,6 +191,20 @@ BlockPrefix_t *findFirstFit(size_t s) {	/* find first block with usable space > 
     return growArena(s);
 }
 
+BlockPrefix_t *lastAlloc; 
+/////////////////////Next Fit Function 
+BlockPrefix_t *findNextFit(size_t s) {	/* find Best block with usable space > s */
+  BlockPrefix_t *p = lastAlloc; 
+    while (p) {
+	if (!p->allocated && computeUsableSpace(p) >= s)
+	    return p;
+	p = getNextPrefix(p);
+    }
+    return growArena(s);
+}
+
+
+
 /* conversion between blocks & regions (offset of prefixSize */
 
 BlockPrefix_t *regionToPrefix(void *r) {
@@ -233,6 +247,31 @@ void *firstFitAllocRegion(size_t s) {
   
 }
 
+void *NextAllocRegion(size_t s) {
+  size_t asize = align8(s);
+  BlockPrefix_t *p;
+  if (arenaBegin == 0)		/* arena uninitialized? */
+    initializeArena();
+  p = findFirstFit(s);		/* find a block */
+  if (p) {			/* found a block */
+    size_t availSize = computeUsableSpace(p);
+    if (availSize >= (asize + prefixSize + suffixSize + 8)) { /* split block? */
+      void *freeSliverStart = (void *)p + prefixSize + suffixSize + asize;
+      void *freeSliverEnd = computeNextPrefixAddr(p);
+      makeFreeBlock(freeSliverStart, freeSliverEnd - freeSliverStart);
+      makeFreeBlock(p, freeSliverStart - (void *)p); /* piece being allocated */
+    }
+    p->allocated = 1;		/* mark as allocated */
+    return prefixToRegion(p);	/* convert to *region */
+  } else {			/* failed */
+    return (void *)0;
+  }
+  
+}
+
+
+
+
 void freeRegion(void *r) {
     if (r != 0) {
 	BlockPrefix_t *p = regionToPrefix(r); /* convert to block */
@@ -253,12 +292,30 @@ void freeRegion(void *r) {
 */
 void *resizeRegion(void *r, size_t newSize) {
   int oldSize;
+  int aNewSize;
+  BlockPrefix_t *p = regionToPrefix(r);
+  BlockPrefix_t  *np = computeNextPrefixAddr(r);
+  int freeSpace = computeUsableSpace(np); 
+  
+  aNewSize = oldSize + computeUsableSpace(np) + prefixSize + suffixSize+8;
+
   if (r != (void *)0)		/* old region existed */
     oldSize = computeUsableSpace(regionToPrefix(r));
   else
     oldSize = 0;		/* non-existant regions have size 0 */
   if (oldSize >= newSize)	/* old region is big enough */
     return r;
+
+  ////////////////////////////////////////////.........................../////////////////////////////////////////////////////
+  if(np->allocated==0 && aNewSize<=newSize){
+     p->suffix = np->suffix;
+     np->suffix->prefix = p;
+    
+    r= prefixToRegion(p);
+    
+  }
+
+
   else {			/* allocate new region & copy old data */
     char *o = (char *)r;	/* treat both regions as char* */
     char *n = (char *)firstFitAllocRegion(newSize); 
@@ -269,4 +326,3 @@ void *resizeRegion(void *r, size_t newSize) {
     return (void *)n;
   }
 }
-
