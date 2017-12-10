@@ -194,7 +194,7 @@ BlockPrefix_t *findFirstFit(size_t s) {	/* find first block with usable space > 
 
 //BlockPrefix_t *lastAlloc; 
 /////////////////////Next Fit Function 
-BlockPrefix_t *findNextFit(size_t s) {	/* find Best block with usable space > s */
+BlockPrefix_t *findNextFit(size_t s) {	/* find Next block with usable space > s */
   BlockPrefix_t *p = lastAlloc;
      while (p) {
        if (!p->allocated && computeUsableSpace(p) >= s){ 
@@ -326,7 +326,7 @@ void *resizeRegion(void *r, size_t newSize) {
 
   else {			/* allocate new region & copy old data */
     char *o = (char *)r;	/* treat both regions as char* */
-    char *n = (char *)firstFitAllocRegion(newSize); 
+    char *n = (char *)NextAllocRegion(newSize); 
     int i;
     for (i = 0; i < oldSize; i++) /* copy byte-by-byte, should use memcpy */
       n[i] = o[i];

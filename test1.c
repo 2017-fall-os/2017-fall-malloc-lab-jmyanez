@@ -21,20 +21,34 @@ void getutime(struct timeval *t)
 
 int main() 
 {
-  void *p1, *p2, *p3;
+  
+  void *p1, *p2, *p3,*p4;
   arenaCheck();
-  p1 = malloc(254);
+  p1 = malloc(50000);
   arenaCheck();
-  p2 = malloc(25400);
+  p2 = malloc(800);
   arenaCheck();
-  p3 = malloc(254);
-  printf("%8zx %8zx %8zx\n", p1, p2, p3);
+  p3 = malloc(40);
+  arenaCheck();
+  p4= malloc(1200);
+  printf("%8zx %8zx %8zx %8zx\n", p1, p2, p3, p4);
+  printf("Changing last alloc to p1!\n");
+  lastAlloc= regionToPrefix(p1);
+  printf("Changin status of lastAlloc p1 to not allocated\n");
+  lastAlloc->allocated=0;
+  printf("Allocating a new quantity of memory to p1\n");
+  printf("This Arena check shows the value of p1 before changing it\n");
+  arenaCheck();
+  p1=malloc(500);
+  printf("Now this arena check shows the new value for p1!\n");
+  arenaCheck();
+  free(p1);
   arenaCheck();
   free(p2);
   arenaCheck();
   free(p3);
   arenaCheck();
-  free(p1);
+  free(p4);
   arenaCheck();
   {				/* measure time for 10000 mallocs */
     struct timeval t1, t2;

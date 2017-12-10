@@ -9,7 +9,16 @@ Danner Pacheco debugging  purposses
 
 Dr Freudenthal Code was really useful to implement what we were asked to do.
 
+#ATTENTION!!! CHANGES DONE IN 12/10/2017
+Hello Adrian!
 
+I used the feedback from the excel spreadsheet to fix the issues with my lab
+1- I was calling last alloc in resize region, now i am calling
+NextAllocRegion
+2- I did not modify the test for my program, now i am allocating 4 chunks of memory after allocating the 4 i change the value of lastAlloc to p1, and
+mark it as not allocated, then i do malloc again to p1 and its allocated.
+Also here what i did was in malloc change firstFit(The default) to
+NextFit so i did not had to modify all the malloc calls.
 
 os-malloc
 This directory contains:

@@ -11,8 +11,11 @@ typedef struct BlockSuffix_s {
   struct BlockPrefix_s *prefix;
 } BlockSuffix_t;
 
+
+BlockPrefix_t *lastAlloc;
 void arenaCheck(void);
 void *firstFitAllocRegion(size_t s);
+void *NextAllocRegion(size_t s);
 void freeRegion(void *r);
 void *resizeRegion(void *r, size_t newSize);
 size_t computeUsableSpace(BlockPrefix_t *p);
